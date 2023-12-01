@@ -31,6 +31,11 @@ const server = Bun.serve({
     port: 3000,
     async fetch(req: Request) {
         const url = new URL(req.url);
+        const responseInit: ResponseInit = {
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+            },
+        };
         // Usage
         tasks = await loadTasksFromFile();
         newTaskIdInNumber = tasks.length + 1
@@ -40,9 +45,9 @@ const server = Bun.serve({
         if (req.method === 'GET' && url.pathname === '/tasks') {
             // Get all tasks
             if (tasks.length === 0) {
-                return new Response('No tasks found');
+                return new Response('No tasks found', responseInit);
             } else {
-                return new Response(JSON.stringify(tasks));
+                return new Response(JSON.stringify(tasks), responseInit);
             }
         }
 
@@ -51,9 +56,9 @@ const server = Bun.serve({
             const id = url.pathname.split('/')[2];
             const task = tasks.find(t => t.id === id);
             if (task) {
-                return new Response(JSON.stringify(task));
+                return new Response(JSON.stringify(task), responseInit);
             } else {
-                return new Response('Task not found', { status: 404 });
+                return new Response('Task not found', { status: 404, ...responseInit });
             }
         }
 
@@ -62,7 +67,7 @@ const server = Bun.serve({
             const pathId = url.pathname.split('/')[2];
             const taskIndex = tasks.findIndex(t => t.id === pathId);
             if (taskIndex === -1) {
-                return new Response('Task not found', { status: 404 });
+                return new Response('Task not found', { status: 404, ...responseInit });
             }
             if (req.body) {
                 const stream = req.body;
@@ -76,9 +81,9 @@ const server = Bun.serve({
                 tasks[taskIndex] = updatedTask;
                 await Bun.write(tasksFile, JSON.stringify({ tasks: tasks }));
 
-                return new Response(JSON.stringify(tasks[taskIndex]));
+                return new Response(JSON.stringify(tasks[taskIndex]), responseInit);
             } else {
-                return new Response('No task data provided', { status: 400 });
+                return new Response('No task data provided', { status: 400, ...responseInit });
             }
         }
 
@@ -95,9 +100,9 @@ const server = Bun.serve({
                 tasks.push(newTask);
 
                 await Bun.write(tasksFile, JSON.stringify({ tasks: tasks }))
-                return new Response(JSON.stringify(newTask));
+                return new Response(JSON.stringify(newTask), responseInit);
             } else {
-                return new Response('No task data provided', { status: 400 });
+                return new Response('No task data provided', { status: 400, ...responseInit });
             }
         }
 
@@ -106,9 +111,10 @@ const server = Bun.serve({
             const id = url.pathname.split('/')[2];
             tasks = tasks.filter(t => t.id !== id);
             await Bun.write(tasksFile, JSON.stringify({ tasks: tasks }))
-            return new Response(JSON.stringify({ message: 'Task deleted' }));
+            return new Response(JSON.stringify({ message: 'Task deleted' }), responseInit);
         }
 
-        return new Response('404!');
+        return new Response('404!', responseInit);
     },
 });
+
