@@ -1,0 +1,21 @@
+version: "3"
+services:
+  bun-backend:
+    build:
+      context: ./bun_backend
+      dockerfile: Dockerfile
+    ports:
+      - "3500:3500"
+    volumes:
+      - ./bun_backend:/app
+    environment:
+      - PORT=3500
+
+  react-frontend:
+    build:
+      context: ./react_frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./react_frontend:/app
