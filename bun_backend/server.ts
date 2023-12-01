@@ -28,7 +28,7 @@ interface Task {
 }
 
 const server = Bun.serve({
-    port: 3000,
+    port: 3500,
     async fetch(req: Request) {
         const url = new URL(req.url);
         const responseInit: ResponseInit = {
