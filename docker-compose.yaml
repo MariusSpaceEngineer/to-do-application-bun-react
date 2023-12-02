@@ -11,11 +11,11 @@ services:
     environment:
       - PORT=3500
 
-  react-frontend:
-    build:
-      context: ./react_frontend
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./react_frontend:/app
+  # react-frontend:
+  #   build:
+  #     context: ./react_frontend
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ./react_frontend:/app
