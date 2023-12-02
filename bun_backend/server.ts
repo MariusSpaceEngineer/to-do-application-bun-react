@@ -28,7 +28,7 @@ interface Task {
 
 // Usage
 tasks = await loadTasksFromFile();
-id = tasks[tasks.length - 1].id;
+
 
 const server = Bun.serve({
     port: 3500,
@@ -41,6 +41,7 @@ const server = Bun.serve({
                 'Access-Control-Allow-Headers': 'Content-Type',
             },
         };
+        id = tasks[tasks.length - 1].id;
 
         if (req.method === 'GET' && url.pathname === '/tasks') {
             // Get all tasks
